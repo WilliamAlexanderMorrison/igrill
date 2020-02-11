@@ -1,6 +1,6 @@
 from builtins import range
 from config import strip_config
-from igrill import IGrillMiniPeripheral, IGrillV2Peripheral, IGrillV3Peripheral, DeviceThread
+from rpi-monitor-mqtt import RaspberryPi, DeviceThread
 import logging
 import paho.mqtt.client as mqtt
 
@@ -11,7 +11,7 @@ config_requirements = {
     'children': {
         'devices': {
             'specs': {
-                'required_entries': {'name': str, 'type': str, 'address': str, 'topic': str, 'interval': int},
+                'required_entries': {'name': str, 'type': str, 'topic': str, 'interval': int},
                 'list_type': dict
             }
         },
@@ -97,24 +97,17 @@ def mqtt_init(mqtt_config):
     return mqtt_client
 
 
-def publish(temperatures, battery, client, base_topic, device_name):
-    for i in range(1, 5):
-        if temperatures[i]:
-            client.publish("{0}/{1}/probe{2}".format(base_topic, device_name, i), temperatures[i])
-
-    client.publish("{0}/{1}/battery".format(base_topic, device_name), battery)
-
+def publish(payload, client, base_topic, device_name):
+	client.publish("newtopic".format(base_topic, device_name), payload)
 
 def get_devices(device_config):
     if device_config is None:
         logging.warn('No devices in config')
         return {}
 
-    device_types = {'igrill_mini': IGrillMiniPeripheral,
-                    'igrill_v2': IGrillV2Peripheral,
-                    'igrill_v3': IGrillV3Peripheral}
+    device_types = {'raspberrypi': RaspberryPi}
 
-    return [device_types[d['type']](**strip_config(d, ['address', 'name'])) for d in device_config]
+    return [device_types[d['type']](**strip_config(d, ['name'])) for d in device_config]
 
 
 def get_device_threads(device_config, mqtt_config, run_event):
@@ -122,6 +115,6 @@ def get_device_threads(device_config, mqtt_config, run_event):
         logging.warn('No devices in config')
         return {}
 
-    return [DeviceThread(ind, d['name'], d['address'], d['type'], mqtt_config, d['topic'], d['interval'], run_event) for ind, d in
+    return [DeviceThread(ind, d['name'], d['type'], mqtt_config, d['topic'], d['interval'], run_event) for ind, d in
             enumerate(device_config)]
 

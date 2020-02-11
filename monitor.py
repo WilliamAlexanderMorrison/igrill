@@ -11,7 +11,7 @@ from utils import log_setup, mqtt_init, get_device_threads, config_requirements,
 
 def main():
     # Setup argument parsing
-    parser = argparse.ArgumentParser(description='Monitor bluetooth igrill devices, and export to MQTT')
+    parser = argparse.ArgumentParser(description='Monitor Raspberry Pi devices, and export to MQTT')
     parser.add_argument('-c', '--config', action='store', dest='config_directory', default='.',
                         help='Set config directory, default: \'.\'')
     parser.add_argument('-l', '--log-level', action='store', dest='log_level', default='INFO',

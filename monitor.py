@@ -6,7 +6,7 @@ import threading
 import time
 
 from config import Config
-from utils import log_setup, mqtt_init, config_requirements, config_defaults
+from utils import log_setup, mqtt_init, get_device_threads, config_requirements, config_defaults
 
 
 def main():
@@ -36,11 +36,10 @@ def main():
     run_event = threading.Event()
     run_event.set()
     # Get device threads
-    #devices = get_device_threads(config.get_config('devices'), config.get_config('mqtt'), run_event)
-    devices = get_device_threads(config.get_config('mqtt'), run_event)
+    devices = get_device_threads(config.get_config('devices'), config.get_config('mqtt'), run_event)
 
-    #for device in devices:
-        #device.start()
+    for device in devices:
+        device.start()
 
     try:
         while True:
@@ -49,8 +48,8 @@ def main():
         logging.info('Signaling all device threads to finish')
 
         run_event.clear()
-        #for device in devices:
-            #device.join()
+        for device in devices:
+            device.join()
 
         logging.info('All threads finished, exiting')
 

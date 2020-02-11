@@ -1,12 +1,17 @@
 # iGrill
-Monitor your iGrill (mini, v2 or v3) (with a Raspberry Pi 1/2/3) - and forward it to a mqtt-server
+Monitor your Raspberry Pi 4 and forward it to a mqtt-server.
 
 ## What do you need
 ### Hardware
-* An iGrill Device (and at least one probe) - **iGrill mini**, **iGrill 2** or **iGrill 3**
-* A bluetooth enabled computer - preferable a raspberry pi
+* A raspberry pi
 * A mqtt server as message receiver
 
+## Configuration of MQTT
+
+## Docker Instructions
+DOCUMENTATION FOR INSTALLING VIA DOCKER HERE
+
+REMAINING DOCUMENTATION FROM FORKED PROJECT, TO BE DELETED.
 ## Installation
 1. clone this repo
 1. install required modules (see requirements.txt)
@@ -37,10 +42,3 @@ Run `systemctl daemon-reload && systemctl enable igrill && systemctl start igril
 
 Next time you reboot, the iGrill service will connect and reconnect if something goes wrong...
 
-## Troubleshooting
-
-If your device is stuck on "Authenticating" the following has been reported to work:
-1. within the file /etc/bluetooth/main.conf under [Policy] check the existence of
-AutoEnable=true
-1. Comment out below line in /lib/udev/rules.d/90-pi-bluetooth.rules
-by prefixing "#" the line ACTION=="add", SUBSYSTEM=="bluetooth", KERNEL=="hci[0-9]*", RUN+="/bin/hciconfig %k up"

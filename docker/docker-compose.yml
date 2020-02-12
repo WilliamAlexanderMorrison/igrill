@@ -1,0 +1,13 @@
+version: '3'
+services:
+  rpi-monitor-mqtt:
+    container_name: rpi-monitor-mqtt
+    hostname: rpi-monitor-mqtt
+    build: .
+    volumes:
+      - .:/rpi-monitor-mqtt/config
+    network_mode: host
+    #restart: unless-stopped
+    restart: "no"
+    tty: true
+    command: tail -F anything

@@ -17,7 +17,7 @@ class IDevicePeripheral():
         logging.debug("Trying to connect to the device {}".format(name))
         self.name = name
 
-class RaspberryPi():
+class RaspberryPiPeripheral():
     """
     Specialization of iDevice peripheral for the RaspberryPi
     """
@@ -26,6 +26,7 @@ class RaspberryPi():
         IDevicePeripheral.__init__(self, name)	
 
 class DeviceThread(threading.Thread):
+    device_types = {'raspberrypi': RaspberryPiPeripheral}
 
     def __init__(self, thread_id, name, device_type, mqtt_config, topic, interval, run_event):
         threading.Thread.__init__(self)
@@ -41,6 +42,7 @@ class DeviceThread(threading.Thread):
         while self.run_event.is_set():
             try:
                 logging.debug("Device thread {} (re)started, trying to collect statistics".format(self.name))
+                device = self.device_types[self.type](self.name)
                 self.mqtt_client.reconnect()
                 while True:
                     payload = 100;

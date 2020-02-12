@@ -46,13 +46,12 @@ def main():
             time.sleep(.1)
     except KeyboardInterrupt:
         logging.info('Signaling all device threads to finish')
-
         run_event.clear()
+
         for device in devices:
             device.join()
 
         logging.info('All threads finished, exiting')
-
 
 if __name__ == '__main__':
     main()

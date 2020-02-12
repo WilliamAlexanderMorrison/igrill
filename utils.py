@@ -1,6 +1,6 @@
 from builtins import range
 from config import strip_config
-from rpimonitormqtt import DeviceThread
+from rpimonitormqtt import RaspberryPiPeripheral, DeviceThread
 import logging
 import paho.mqtt.client as mqtt
 
@@ -105,7 +105,7 @@ def get_devices(device_config):
         logging.warn('No devices in config')
         return {}
 
-    device_types = {'raspberrypi': RaspberryPi}
+    device_types = {'raspberrypi': RaspberryPiPeripheral}
 
     return [device_types[d['type']](**strip_config(d, ['name'])) for d in device_config]
 

@@ -9,10 +9,7 @@ import random
 import utils
 
 
-class IDevicePeripheral(btle.Peripheral):
-    encryption_key = None
-    btle_lock = threading.Lock()
-
+class IDevicePeripheral():
     def __init__(self, name):
         """
         Connects to the device given by address performing necessary authentication
@@ -21,13 +18,14 @@ class IDevicePeripheral(btle.Peripheral):
         self.name = name
 
 class RaspberryPi():
-	def __init__(self, name='raspberrypi'):
+    """
+    Specialization of iDevice peripheral for the RaspberryPi
+    """
+    def __init__(self, name='raspberrypi'):
         logging.debug("Created new device with name {}".format(name))
-        IDevicePeripheral.__init__(self, name)
-
+        IDevicePeripheral.__init__(self, name)	
 
 class DeviceThread(threading.Thread):
-    device_types = {'raspberrypi': RaspberryPi}
 
     def __init__(self, thread_id, name, device_type, mqtt_config, topic, interval, run_event):
         threading.Thread.__init__(self)
@@ -43,12 +41,11 @@ class DeviceThread(threading.Thread):
         while self.run_event.is_set():
             try:
                 logging.debug("Device thread {} (re)started, trying to collect statistics".format(self.name))
-                device = self.device_types[self.type](self.name)
                 self.mqtt_client.reconnect()
                 while True:
-					payload = 100;
-                    utils.publish(payload, self.mqtt_client, self.topic, device.name)
-                    logging.debug("Published payload: {} to topic {}/{}".format(payload, self.topic, device.name))
+                    payload = 100;
+                    utils.publish(payload, self.mqtt_client, self.topic, self.name)
+                    logging.debug("Published payload: {} to topic {}/{}".format(payload, self.topic, self.name))
                     logging.debug("Sleeping for {} seconds".format(self.interval))
                     time.sleep(self.interval)
             except Exception as e:

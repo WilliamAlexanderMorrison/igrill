@@ -1,6 +1,6 @@
 from builtins import range
 from config import strip_config
-from rpi-monitor-mqtt import RaspberryPi, DeviceThread
+from rpimonitormqtt import DeviceThread
 import logging
 import paho.mqtt.client as mqtt
 

@@ -17,7 +17,7 @@ class IDevicePeripheral():
         logging.debug("Trying to connect to the device {}".format(name))
         self.name = name
 
-class RaspberryPiPeripheral():
+class RaspberryPiPeripheral(IDevicePeripheral):
     """
     Specialization of iDevice peripheral for the RaspberryPi
     """
@@ -45,9 +45,14 @@ class DeviceThread(threading.Thread):
                 device = self.device_types[self.type](self.name)
                 self.mqtt_client.reconnect()
                 while True:
-                    payload = 100;
-                    utils.publish(payload, self.mqtt_client, self.topic, self.name)
-                    logging.debug("Published payload: {} to topic {}/{}".format(payload, self.topic, self.name))
+                    payload = {'load_1m': .5, 
+					           'memory_use_percent': 25, 
+							   'temp': 42, 
+							   'last_boot': '2020 02 11',
+							   'disk_use_percent': 20,
+							   'rpi_power_status': 'Everything is working as intended'}
+                    utils.publish(payload, self.mqtt_client, self.topic, device.name)
+                    logging.debug("Published payload: {} to topic {}/{}".format(payload, self.topic, device.name))
                     logging.debug("Sleeping for {} seconds".format(self.interval))
                     time.sleep(self.interval)
             except Exception as e:

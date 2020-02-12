@@ -98,7 +98,8 @@ def mqtt_init(mqtt_config):
 
 
 def publish(payload, client, base_topic, device_name):
-	client.publish("newtopic".format(base_topic, device_name), payload)
+    for key in payload:
+	    client.publish(key.format(base_topic, device_name), payload[key])
 
 def get_devices(device_config):
     if device_config is None:

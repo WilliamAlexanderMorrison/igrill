@@ -83,7 +83,6 @@ class RaspberryPiPeripheral(IDevicePeripheral):
 
 class DeviceThread(threading.Thread):
     device_types = {'raspberrypi': RaspberryPiPeripheral}
-	payload = {}
 
     def __init__(self, thread_id, name, device_type, mqtt_config, topic, interval, run_event):
         threading.Thread.__init__(self)
@@ -94,6 +93,7 @@ class DeviceThread(threading.Thread):
         self.topic = topic
         self.interval = interval
         self.run_event = run_event
+        payload = {}
 
     def run(self):
         while self.run_event.is_set():

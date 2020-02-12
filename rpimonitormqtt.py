@@ -93,7 +93,7 @@ class DeviceThread(threading.Thread):
         self.topic = topic
         self.interval = interval
         self.run_event = run_event
-        payload = {}
+        self.payload = {}
 
     def run(self):
         while self.run_event.is_set():
@@ -103,10 +103,10 @@ class DeviceThread(threading.Thread):
                 self.mqtt_client.reconnect()
                 while True:
                     payload.clear()
-                    
+
                     load_1m = device.load_1m()
                     if load_1m:
-                        payload['load_1m'] = load_1m                    
+                        payload['load_1m'] = load_1m
                     memory_use_percent = device.memory_use_percent()
                     if memory_use_percent:
                         payload['memory_use_percent'] = memory_use_percent

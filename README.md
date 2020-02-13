@@ -8,37 +8,19 @@ Monitor your Raspberry Pi 4 and forward it to a mqtt-server.
 
 ## Configuration of MQTT
 
-## Docker Instructions
-DOCUMENTATION FOR INSTALLING VIA DOCKER HERE
-
-REMAINING DOCUMENTATION FROM FORKED PROJECT, TO BE DELETED.
-## Installation
-1. clone this repo
-1. install required modules (see requirements.txt)
-1. Add at least one device config (see ./exampleconfig/device.yaml) - to find your device MAC just run `hcitool lescan`
-1. start application `./monitor.py`
-1. enjoy
-
-### systemd startup-script
-
-Place this file into the proper folder - for instance: `/lib/systemd/system/igrill.service`
-
-```bash
-[Unit]
-Description=igrill MQTT service
-After=network.target
-
-[Service]
-Type=simple
-Restart=always
-RestartSec=2
-ExecStart=/usr/bin/python <path_to_igrill_repo>/monitor.py -c <path_to_config_dir>
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Run `systemctl daemon-reload && systemctl enable igrill && systemctl start igrill`
-
-Next time you reboot, the iGrill service will connect and reconnect if something goes wrong...
-
+## Step-by-Step Instructions to Install Configure Raspberry Pi Monitor
+* Install both Docker and Docker Compose following instructions in this [documentation](https://withblue.ink/2019/07/13/yes-you-can-run-docker-on-raspbian.html)
+* Create a directory with the docker and monitor configuration files in this repo by using the command `git clone https://github.com/WilliamAlexanderMorrison/rpi-monitor-mqtt`
+* Navigate into the rpi-monitor-mqtt directory 
+* Open the `device.yaml` configuration file 
+  * Make naming and topic configuration changes as desired
+* Open the `mqtt.yaml` configuration file
+  * Replace `IPHOSTNAME` with the IP of your Raspberry Pi with the Broker
+  * Replace `USERNAME` to match the `USERNAME` you created for Home Assistant/Mosquitto broker
+  * Replace `PASSWORD` to match the `PASSWORD` you created for Home Assistant/Mosquitto broker
+  * Make any other configuration changes as desired
+* Build the docker with the command `docker-compose build`
+  * This will create a docker container with the rpi-monitor-mqtt repo
+* Start the docker container with the command `docker-compose up -d`
+* Test that the monitor is pushing data to the Mosquitto broker by navigating to the MQTT Developer Tools within Home Assistant, and set the Listen to a Topic to `#` (all) channels and Start Listening
+  * You should see a temperature update and a battery update about every 20 seconds

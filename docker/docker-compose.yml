@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/rpi-monitor-mqtt/config
     network_mode: host
-    #restart: unless-stopped
-    restart: "no"
-    tty: true
-    command: tail -F anything
+    restart: unless-stopped
+    #restart: "no"
+    #tty: true
+    #command: tail -F anything

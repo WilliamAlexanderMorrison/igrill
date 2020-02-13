@@ -56,7 +56,7 @@ class IDevicePeripheral():
             return False
 
         return result
-        
+
 
     def disk_use_percent(self):
         #https://stackoverflow.com/questions/12027237/selecting-specific-columns-from-df-h-output-in-python
@@ -68,7 +68,7 @@ class IDevicePeripheral():
 
         dfdata = dfdata.splitlines()
         result = dfdata[1].split()
-        return result[4]
+        return result[4].rstrip("%")
 
     def rpi_power_status(self):
         #https://github.com/custom-components/sensor.rpi_power/blob/master/custom_components/rpi_power/sensor.py

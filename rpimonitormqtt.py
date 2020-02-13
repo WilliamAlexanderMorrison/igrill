@@ -10,6 +10,7 @@ import utils
 
 import os
 import psutil
+import subprocess
 
 
 class IDevicePeripheral():

@@ -99,7 +99,7 @@ def mqtt_init(mqtt_config):
 
 def publish(payload, client, base_topic, device_name):
     for key in payload:
-	    client.publish(key.format(base_topic, device_name), payload[key])
+        client.publish("{0}/{1}/{2}".format(base_topic, device_name, key), payload[key])
 
 def get_devices(device_config):
     if device_config is None:

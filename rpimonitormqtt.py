@@ -19,14 +19,14 @@ class IDevicePeripheral():
         """
         logging.debug("Loading statistics for the device {}".format(name))
         self.name = name
-		
+
     def load_1m(self):
         #https://github.com/home-assistant/home-assistant/blob/dev/homeassistant/components/systemmonitor/sensor.py
         return round(os.getloadavg()[0], 2)
-		
+
     def memory_use_percent(self):
         return psutil.virtual_memory().percent
-		
+
     def temperature(self):
         #https://thesmithfam.org/blog/2005/11/19/python-uptime-script/
         try:
@@ -35,7 +35,7 @@ class IDevicePeripheral():
             f.close()
         except:
             return False
- 
+
         return contents[0]
 
     def last_boot(self):
@@ -54,7 +54,7 @@ class IDevicePeripheral():
             f.close()
         except:
             return False
-            
+
         if contents[0] == '0':
             rpi_power_status_description = 'Everything is working as intended'
         elif contents[0] == '1000':
@@ -70,8 +70,8 @@ class IDevicePeripheral():
         elif contents[0] == '8000':
             rpi_power_status_description = 'Your Raspberry Pi is overheating, consider getting a fan or heat sinks.'
         else:
-            rpi_power_status_description = 'There is a problem with your power supply or system.' 
-        return rpi_power_status_description        
+            rpi_power_status_description = 'There is a problem with your power supply or system.'
+        return rpi_power_status_description
 
 class RaspberryPiPeripheral(IDevicePeripheral):
     """
@@ -79,7 +79,7 @@ class RaspberryPiPeripheral(IDevicePeripheral):
     """
     def __init__(self, name='raspberrypi'):
         logging.debug("Created new device with name {}".format(name))
-        IDevicePeripheral.__init__(self, name)	
+        IDevicePeripheral.__init__(self, name)
 
 class DeviceThread(threading.Thread):
     device_types = {'raspberrypi': RaspberryPiPeripheral}
@@ -93,7 +93,6 @@ class DeviceThread(threading.Thread):
         self.topic = topic
         self.interval = interval
         self.run_event = run_event
-        self.payload = {}
 
     def run(self):
         while self.run_event.is_set():
@@ -102,8 +101,7 @@ class DeviceThread(threading.Thread):
                 device = self.device_types[self.type](self.name)
                 self.mqtt_client.reconnect()
                 while True:
-                    payload.clear()
-
+                    payload = {}
                     load_1m = device.load_1m()
                     if load_1m:
                         payload['load_1m'] = load_1m
@@ -119,9 +117,9 @@ class DeviceThread(threading.Thread):
                     disk_use_percent = device.disk_use_percent()
                     if disk_use_percent:
                         payload['disk_use_percent'] = disk_use_percent
-                    disk_use_percent = device.disk_use_percent()
+                    rpi_power_status = device.rpi_power_status()
                     if rpi_power_status:
-                        payload['rpi_power_status'] = rpi_power_status
+                        payload['rpi_power_status'] = device.rpi_power_status()
 
                     utils.publish(payload, self.mqtt_client, self.topic, device.name)
                     logging.debug("Published payload: {} to topic {}/{}".format(payload, self.topic, device.name))

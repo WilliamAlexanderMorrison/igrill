@@ -1,6 +1,5 @@
 devices:
-  - name:       'rpi_igrill'                  # Unique name of the device
-    type:       'raspberypi'                  # Supported devices: raspberrypi
-    #address:    'YY:XX:ZZ:00:00:00'          # The MAC of the device
-    topic:      'systemmonitor/rpi/igrill'    # The topic to publish on.
-    interval:   20                            # Polling interval
+  - name:       'rpi_igrill'        # Unique name of the device
+    type:       'raspberypi'        # Supported devices: raspberrypi
+    topic:      'systemmonitor'     # The topic to publish on.
+    interval:   20                  # Polling interval

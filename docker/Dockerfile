@@ -8,7 +8,7 @@ RUN pip install paho-mqtt==1.4.0 \
 		PyYAML==5.1.2 \
 		yamlreader==3.0.4 \
 		future==0.17.1 \
-        psutil
+        psutil==5.6.7
 ADD https://api.github.com/repos/WilliamAlexanderMorrison/rpi-monitor-mqtt/git/refs/heads/master version.json
 RUN git clone https://github.com/WilliamAlexanderMorrison/rpi-monitor-mqtt.git
 WORKDIR /rpi-monitor-mqtt

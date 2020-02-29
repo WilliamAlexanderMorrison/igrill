@@ -1,4 +1,4 @@
-# iGrill
+# Raspberry MQTT System Monitor
 Monitor your Raspberry Pi 4 and forward it to a mqtt-server.
 
 ## What do you need

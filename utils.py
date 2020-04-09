@@ -3,6 +3,8 @@ from config import strip_config
 from rpimonitormqtt import RaspberryPiPeripheral, DeviceThread
 import logging
 import paho.mqtt.client as mqtt
+import socket
+import sys
 
 config_requirements = {
     'specs': {
@@ -92,8 +94,12 @@ def mqtt_init(mqtt_config):
             mqtt_client.tls_set(**tls_config)
         else:
             mqtt_client.tls_set()
-
-    mqtt_client.connect(**strip_config(mqtt_config, ['host', 'port', 'keepalive']))
+    try:
+        mqtt_client.connect(**strip_config(mqtt_config, ['host', 'port', 'keepalive']))
+    except socket.error, err:
+        logging.info("Socket error exception, exiting script: %s" % err)
+        sys.exit(1)
+        
     return mqtt_client
 
 

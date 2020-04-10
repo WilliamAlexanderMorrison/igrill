@@ -97,7 +97,7 @@ def mqtt_init(mqtt_config):
     try:
         mqtt_client.connect(**strip_config(mqtt_config, ['host', 'port', 'keepalive']))
     except socket.error, err:
-        logging.info("Socket error exception, exiting script: %s" % err)
+        logging.critical("Socket error exception, exiting script: %s" % err)
         sys.exit(1)
         
     return mqtt_client
